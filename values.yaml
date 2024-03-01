@@ -2,7 +2,8 @@ image:
   tag: "v2.0.0-rc6"
 service:
   type: NodePort
-  port: 5000
+  port: 5050
+  nodePort: 30377
 ingress:
   enabled: true
   annotations: 
@@ -11,12 +12,12 @@ ingress:
   className: "nginx"
   pathtype: ImplementationSpecific
   hosts:
-    - host: zot.<change to your nginx LB DNS>
+    - host: zot-ai.palette-adv.spectrocloud.com
       paths:
         - path: /
   tls: 
     - hosts:
-      - zot.<change to your nginx LB DNS>
+      - zot-ai.palette-adv.spectrocloud.com
       secretName: zot-tls
 httpGet:
   scheme: HTTP
@@ -26,40 +27,32 @@ configFiles:
     {
       "http": {
         "address":"0.0.0.0",
-        "port":"5000",
+        "port":"5050",
         "auth":{
-        "htpasswd": {
-          "path": "/secret/htpasswd"
-        }
+          "htpasswd": {
+            "path": "/secret/htpasswd"
+          }
         }
       },
       "log": {
         "level":"debug"
       },
       "extensions": {
-      "search": {
-      "enable": true
-      },
-      "ui": {
-        "enable": true
-      },
-      "mgmt": {
-        "enable": true
-      }
+        "search": {
+          "enable": true
+        },
+        "ui": {
+          "enable": true
+        },
+        "mgmt": {
+          "enable": true
+        }
       },
       "storage": {
-        "dedupe": false,
+        "dedupe": true,
         "rootDirectory": "/tmp/zot",
-        "storageDriver": {
-            "name": "s3",
-            "region": "lon1",
-            "regionendpoint": "https://objectstore.lon1.civo.com",
-            "bucket": "zot",
-            "secure": true,
-            "skipverify": false,
-            "accesskey": "",
-            "secretkey": ""
-        }
+        "gc": true,
+        "gcDelay": "2h"
       }
     }
 mountSecret: true

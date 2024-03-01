@@ -2,7 +2,7 @@
 This is the repo for Zot demo showcased in [my video](https://youtu.be/zOjOF00aQSY)
 ## Create Kubernetes cluster
 ```
-kind create cluster
+kind create cluster --config kind-config.yaml
 ```
 ## Install cert manager 
 ```
